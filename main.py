@@ -1,6 +1,7 @@
 import pandas as pd
 
 import sys
+import datetime
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLineEdit, QComboBox, QTextEdit
 from PyQt5.QtCore import pyqtSlot
 
@@ -67,26 +68,24 @@ class App(QWidget):
             self.cb_pr_salle.addItems(df_param_pr)
 
 def filter_edt(df,col,pf_name,deb_valid,fin_valid):
-	if (deb_valid=="" or deb_valid==""): 
-		df_final = df[(df[col] == pf_name) & (df.Debut_validite.isnull() | df.Fin_validite.isnull())].sort_values(by=["Jour","Heure debut"])
-	else :
-		df_final = df[(df[col] == pf_name) & (df.Debut_validite.isnull() | df.Fin_validite.isnull() | ((df['Debut_validite'] <= fin_valid) & (df['Fin_validite'] >= deb_valid)))].sort_values(by=["Jour","Heure debut"])		
-	return df_final
-
-
+    now = datetime.datetime.now()
+    dv=now.strftime("%Y-%m-%d") if deb_valid == "" else deb_valid
+    fv=now.strftime("%Y-%m-%d") if fin_valid == "" else fin_valid
+    df_final = df[(df[col] == pf_name) & (df.Debut_validite.isnull() | df.Fin_validite.isnull() | ((df['Debut_validite'] <= fv) & (df['Fin_validite'] >= dv)))].sort_values(by=["Jour","Heure debut"])		
+    return df_final
 
 if __name__ == '__main__':
 	#Ouvrir les données
-	df_cours = pd.read_excel("data/data-edt.xlsx",sheet_name="CoursHebdo", header=0)
-	df_reservation = pd.read_excel("data/data-edt.xlsx",sheet_name="Reservations", header=0).rename(columns = {"Nom réservation":"Cours"})
-	df_union = df_cours.append(df_reservation)
-	
-	#Ouvrir le paramétrage de sélection
-	df_param_pr = pd.read_excel("data/data-edt.xlsx",sheet_name="ListeProfesseurs", header=0).sort_values(by=["Professeur"]).Professeur.tolist()
-	df_param_salle = pd.read_excel("data/data-edt.xlsx",sheet_name="ListeSalles", header=0).sort_values(by=["Salle"]).Salle.tolist()
+    df_cours = pd.read_excel("data/data-edt.xlsx",sheet_name="CoursHebdo", header=0)
+    df_reservation = pd.read_excel("data/data-edt.xlsx",sheet_name="Reservations", header=0).rename(columns = {"Nom réservation":"Cours"})
+    df_union = df_cours.append(df_reservation)
+
+    #Ouvrir le paramétrage de sélection
+    df_param_pr = pd.read_excel("data/data-edt.xlsx",sheet_name="ListeProfesseurs", header=0).sort_values(by=["Professeur"]).Professeur.tolist()
+    df_param_salle = pd.read_excel("data/data-edt.xlsx",sheet_name="ListeSalles", header=0).sort_values(by=["Salle"]).Salle.tolist()
 	
 	#GUI
-	app = QApplication(sys.argv)
-	ex = App()
-	sys.exit(app.exec_())
+    app = QApplication(sys.argv)
+    ex = App()
+    sys.exit(app.exec_())
 
