@@ -15,5 +15,5 @@ def dispo_salle(df, df_param_salle, jour, deb_valid, fin_valid, deb_cren, fin_cr
     dc = datetime.datetime.strptime(deb_cren, '%H:%M').time()
     fc = datetime.datetime.strptime(fin_cren, '%H:%M').time()
     df_salles_occupees = df[(df['Jour'] == jour) & (df.Debut_validite.isnull() | df.Fin_validite.isnull() | ((df['Debut_validite'] <= fv) & (df['Fin_validite'] >= dv))) & ((df['Heure fin'] > dc) & (df['Heure debut'] < fc))].Salle
-    df_final = df_param_salle.to_frame().merge(df_salles_occupees, indicator='i', how='outer').query('i == "left_only"').drop('i', 1)
+    df_final = df_param_salle.to_frame().merge(df_salles_occupees, indicator='i', how='outer').query('i == "left_only"').drop('i', 1).sort_values(by=["Salle"])
     return df_final

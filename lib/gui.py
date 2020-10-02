@@ -127,12 +127,18 @@ class MyTableWidget(QWidget):
     @pyqtSlot()
     def on_click_t1(self):
         df = filter_edt(self.df_data,self.cb_filtre.currentText(),self.cb_pr_salle.currentText(),self.box_dt_deb.text(),self.box_dt_fin.text())
-        self.result.setText(df.to_string(index=False))
+        if df.empty:
+            self.result.setText("Pas de cours")
+        else:
+            self.result.setText(df.to_string(index=False))
 
     @pyqtSlot()
     def on_click_t2(self):
         df = dispo_salle(self.df_data, self.df_param_salle, self.cb_jour.currentText(), self.box_dt_deb_t2.text(), self.box_dt_fin_t2.text(), self.box_cren_deb.text(), self.box_cren_fin.text())
-        self.result_t2.setText(df.to_string(index=False))
+        if df.empty:
+            self.result_t2.setText("Pas de salle disponible")
+        else:
+            self.result_t2.setText(df.to_string(index=False))
 		
     def selectionchange(self,i):
         self.cb_pr_salle.clear()
