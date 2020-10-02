@@ -12,11 +12,12 @@ if __name__ == '__main__':
     df_union = df_cours.append(df_reservation)
 
     #Ouvrir le paramétrage de sélection
-    df_param_pr = pd.read_excel("data/data-edt.xlsx",sheet_name="ListeProfesseurs", header=0).sort_values(by=["Professeur"]).Professeur.tolist()
-    df_param_salle = pd.read_excel("data/data-edt.xlsx",sheet_name="ListeSalles", header=0).sort_values(by=["Salle"]).Salle.tolist()
+    df_param_pr = pd.read_excel("data/data-edt.xlsx", sheet_name="ListeProfesseurs", header=0).sort_values(by=["Professeur"]).Professeur
+    df_param_salle = pd.read_excel("data/data-edt.xlsx", sheet_name="ListeSalles", header=0).sort_values(by=["Salle"]).Salle
+    df_param_jour = pd.read_excel("data/data-edt.xlsx", sheet_name="ListeJours", header=0).sort_values(by=["Jour"]).Jour
 	
 	#GUI
     app = QApplication(sys.argv)
-    ex = App(df_param_salle,df_param_pr,df_union)
+    ex = App(df_param_salle, df_param_pr, df_param_jour, df_union)
     sys.exit(app.exec_())
 
