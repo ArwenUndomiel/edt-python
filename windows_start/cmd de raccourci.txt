@@ -1,0 +1,1 @@
+Powershell -ExecutionPolicy Bypass -File <emplacement du script>\start-det.ps1 "<emplacement du main>" "<emplacement et nom des données>"
